@@ -44,11 +44,14 @@ public class HashExtensivel {
             diretorio2.insereChave("11111"+String.format("%" + tamChave + "s", Integer.toBinaryString(r.nextInt((int) Math.pow((double) 2, tamChave)))).replace(' ', '0'));
         }
 
-        diretorio.showBaldes();
+        
+        
         diretorio.showResultado();
-
-        diretorio2.showBaldes();
         diretorio2.showResultado();
+        
+//        para ver a estrutura do hash descomentar essas chamadas de metedos abaixo
+//        diretorio.showBaldes();
+//        diretorio2.showBaldes();
     }
 
 }
