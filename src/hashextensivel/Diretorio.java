@@ -30,23 +30,19 @@ public class Diretorio {
     public void insereChave(String chave) {
         Balde b = this.buscaBalde(chave);
 //        System.out.println(b.getID() + " " + chave);
-        if (!b.isFull()) {
-            b.insere(chave);
-        } else if (this.profundidadeGlobal == b.getProfundidade()) {
-            duplicarDiretorio();
-            b.addProfundidade();
-            Balde novoBalde = new Balde(tamBalde, b.getProfundidade());
-            IDBalde++;
-            novoBalde.setID(IDBalde);
-            atualizaDiretorio(novoBalde, chave);
-            redistribuirChaves(b, chave);
-        } else if (this.profundidadeGlobal > b.getProfundidade()) {
-            b.addProfundidade();
-            Balde novoBalde = new Balde(tamBalde, b.getProfundidade());
-            IDBalde++;
-            novoBalde.setID(IDBalde);
-            atualizaDiretorio(novoBalde, chave);
-            redistribuirChaves(b, chave);
+        if (!b.hasChave(chave)) {
+            if (!b.isFull()) {
+                b.insere(chave);
+            } else if (this.profundidadeGlobal == b.getProfundidade()) {
+                duplicarDiretorio();
+                b.addProfundidade();
+                atualizaDiretorio(b.getProfundidade(), chave);
+                redistribuirChaves(b, chave);
+            } else if (this.profundidadeGlobal > b.getProfundidade()) {
+                b.addProfundidade();
+                atualizaDiretorio(b.getProfundidade(), chave);
+                redistribuirChaves(b, chave);
+            }
         }
     }
 
@@ -61,7 +57,11 @@ public class Diretorio {
         return null;
     }
 
-    public void atualizaDiretorio(Balde baldeNovo, String chave) {
+    public void atualizaDiretorio(int profundidade, String chave) {
+        Balde baldeNovo = new Balde(tamBalde, profundidade);
+        IDBalde++;
+        baldeNovo.setID(IDBalde);
+
         for (int i = 0; i < this.diretorio.length; i++) {
             String indiceBin = String.format("%" + (int) this.profundidadeGlobal + "s", Integer.toBinaryString(i)).replace(' ', '0');
             String leftBits;
@@ -99,7 +99,6 @@ public class Diretorio {
     }
 
     public void redistribuirChaves(Balde balde, String chave) {
-//        System.out.println("\n");
         Balde aux = new Balde(tamBalde);
         for (int i = 0; i < tamBalde; i++) {
             aux.setChave(i, balde.getChave(i));
@@ -128,7 +127,7 @@ public class Diretorio {
     public void showBaldes() {
         System.out.println("Diretorio, profundidade " + (int) this.profundidadeGlobal);
         for (Integer i = 0; i < this.diretorio.length; i++) {
-            System.out.println("\nEndereço diretório: " + Integer.toBinaryString(i));
+            System.out.println("\nEndereço diretório: " + Integer.toBinaryString(i) + " - " + i);
             this.diretorio[i].showBalde();
         }
 

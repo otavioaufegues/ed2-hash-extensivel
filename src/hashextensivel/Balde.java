@@ -34,6 +34,15 @@ public class Balde {
         return this.chaves.length <= this.numChavesInseridas;
     }
 
+    public boolean hasChave(String chave) {
+        for (String c : this.getChaves()) {
+            if (c != null && c.compareTo(chave) == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void insere(String chave) {
         setChave(this.numChavesInseridas, chave);
         this.numChavesInseridas++;
@@ -49,10 +58,10 @@ public class Balde {
     }
 
     public void showBalde() {
-        System.out.println("Balde "+ ID+"\nProfundidade: " + this.profundidade + "\n");
+        System.out.println("Balde " + ID + "\nProfundidade: " + this.profundidade + "\n");
         int i = 0;
         for (String chave : this.chaves) {
-            System.out.println("Posição: " + i + " => " + chave + "\n");
+            System.out.println("Posição: " + i + " => " + chave);
             i++;
         }
     }
