@@ -13,15 +13,15 @@ public class Diretorio {
 
     int IDBalde = 1;
     private int tamBalde;
-    private int tamChave;
+    private int numRegistros;
     private double profundidadeGlobal;
     private Balde[] diretorio;
 
-    public Diretorio(int tb, int tc) {
+    public Diretorio(int tb) {
         profundidadeGlobal = 0;
+        numRegistros = 0;
         this.diretorio = new Balde[(int) Math.pow((double) 2, profundidadeGlobal)];
         tamBalde = tb;
-        tamChave = tc;
         Balde balde = new Balde(tamBalde);
         balde.setID(IDBalde);
         this.diretorio[0] = balde;
@@ -29,20 +29,26 @@ public class Diretorio {
 
     public void insereChave(String chave) {
         Balde b = this.buscaBalde(chave);
-//        System.out.println(b.getID() + " " + chave);
         if (!b.hasChave(chave)) {
-            if (!b.isFull()) {
-                b.insere(chave);
-            } else if (this.profundidadeGlobal == b.getProfundidade()) {
-                duplicarDiretorio();
-                b.addProfundidade();
-                atualizaDiretorio(b.getProfundidade(), chave);
-                redistribuirChaves(b, chave);
-            } else if (this.profundidadeGlobal > b.getProfundidade()) {
-                b.addProfundidade();
-                atualizaDiretorio(b.getProfundidade(), chave);
-                redistribuirChaves(b, chave);
-            }
+            insere(chave);
+            this.numRegistros++;
+        }
+    }
+
+    public void insere(String chave) {
+        Balde b = this.buscaBalde(chave);
+//        System.out.println(b.getID() + " " + chave);
+        if (!b.isFull()) {
+            b.insere(chave);
+        } else if (this.profundidadeGlobal == b.getProfundidade()) {
+            duplicarDiretorio();
+            b.addProfundidade();
+            atualizaDiretorio(b.getProfundidade(), chave);
+            redistribuirChaves(b, chave);
+        } else if (this.profundidadeGlobal > b.getProfundidade()) {
+            b.addProfundidade();
+            atualizaDiretorio(b.getProfundidade(), chave);
+            redistribuirChaves(b, chave);
         }
     }
 
@@ -105,9 +111,9 @@ public class Diretorio {
         }
         balde.limpaBalde();
         for (String c : aux.getChaves()) {
-            insereChave(c);
+            insere(c);
         }
-        insereChave(chave);
+        insere(chave);
     }
 
     public double getProfundidadeGlobal() {
@@ -118,19 +124,19 @@ public class Diretorio {
         this.profundidadeGlobal = profundidadeGlobal;
     }
 
-    public void showDir() {
-        for (Balde chave : this.diretorio) {
-            System.out.println(chave + "\n");
-        }
+    public void showResultado() {
+        System.out.println("\n\nNúmero de Baldes: " + IDBalde);
+        System.out.println("Fator de Carga: " + this.numRegistros + " / " + this.IDBalde * this.tamBalde + " = " + (double) this.numRegistros / (double) (this.IDBalde * this.tamBalde));
+        System.out.println("Tamanho do Diretório: "+ this.diretorio.length);
     }
 
     public void showBaldes() {
         System.out.println("Diretorio, profundidade " + (int) this.profundidadeGlobal);
+
         for (Integer i = 0; i < this.diretorio.length; i++) {
             System.out.println("\nEndereço diretório: " + Integer.toBinaryString(i) + " - " + i);
             this.diretorio[i].showBalde();
         }
-
     }
 
 }

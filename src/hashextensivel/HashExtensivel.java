@@ -5,6 +5,7 @@
  */
 package hashextensivel;
 
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -17,32 +18,37 @@ public class HashExtensivel {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        int tamBalde = 2;
-        int tamChave = 5;
-        String[] chave;
+        int tamBalde;
+        int tamChave;
+        int numChaves;
         Scanner scanner = new Scanner(System.in);
 
-//        System.out.println("Digite o tamanho dos Baldes: \n");
-//        tamBalde = scanner.nextInt();
-//
-//        System.out.println("Digite o número de bits das chaves: \n");
-//        tamChave = scanner.nextInt();
-//
-        Diretorio diretorio = new Diretorio(tamBalde, tamChave);
+        System.out.println("Digite o tamanho dos Baldes: \n");
+        tamBalde = scanner.nextInt();
 
-        diretorio.insereChave("00001");
-        diretorio.insereChave("01100");
-        diretorio.insereChave("10000");
-        diretorio.insereChave("10001");
-        diretorio.insereChave("11001");
-        diretorio.insereChave("10101");
-        diretorio.insereChave("01111");
-//        diretorio.insereChave("11111");
-//        diretorio.insereChave("00110");
-//        diretorio.insereChave("11100");
-//        diretorio.insereChave("11101");
+        System.out.println("Digite o número de bits das chaves: \n");
+        tamChave = scanner.nextInt();
+
+        System.out.println("Digite o número de pseudo-Chaves: \n");
+        numChaves = scanner.nextInt();
+        
+        Diretorio diretorio = new Diretorio(tamBalde);
+        Diretorio diretorio2 = new Diretorio(tamBalde);
+
+        Random r = new Random();
+        for (int i = 0; i < numChaves; i++) {
+            diretorio.insereChave(String.format("%" + tamChave + "s", Integer.toBinaryString(r.nextInt((int) Math.pow((double) 2, tamChave)))).replace(' ', '0'));
+        }
+        
+        for (int i = 0; i < numChaves; i++) {
+            diretorio2.insereChave("11111"+String.format("%" + tamChave + "s", Integer.toBinaryString(r.nextInt((int) Math.pow((double) 2, tamChave)))).replace(' ', '0'));
+        }
+
         diretorio.showBaldes();
+        diretorio.showResultado();
 
+        diretorio2.showBaldes();
+        diretorio2.showResultado();
     }
 
 }
